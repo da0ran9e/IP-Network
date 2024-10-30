@@ -299,6 +299,9 @@ exit
 conf t
 int vlan 10
 ip address 10.10.10.1 255.255.255.0
+```
+8. 2950B
+```bash
 int vlan 20
 ip address 20.20.20.1 255.255.255.0
 exit
