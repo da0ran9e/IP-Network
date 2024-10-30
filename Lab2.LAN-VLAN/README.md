@@ -203,16 +203,19 @@ enable
 conf t
 hostname 3550A
 ip routing 
+
 interface fa0/1
-switchport trunk encapsulation ?
 switchport trunk encapsulation dot1q
 switchport mode trunk
+
 interface fa0/2
 switchport trunk encapsulation dot1q
 switchport mode trunk
+
 interface fa0/3
 switchport trunk encapsulation dot1q
 switchport mode trunk
+
 interface fa0/4
 switchport trunk encapsulation dot1q
 switchport mode trunk
@@ -271,7 +274,6 @@ exit
 4. 2950A/B
 ```bash
 vtp domain VLANLab
-vtp mode ?
 vtp mode client 
 exit 
 
@@ -283,14 +285,14 @@ show vlan
 conf t
 int fa0/2
 switchport access vlan 10
-cntl-z
+exit
 ```
 6. 2950B
 ```bash
 conf t
 int fa0/2
 switchport access vlan 20
-cntl-z
+exit
 ```
 7. 2950A
 ```bash
@@ -299,8 +301,8 @@ int vlan 10
 ip address 10.10.10.1 255.255.255.0
 int vlan 20
 ip address 20.20.20.1 255.255.255.0
-cntl-z
-
+exit
+exit
 ping 192.168.10.2
 ping 192.168.10.3
 ```
