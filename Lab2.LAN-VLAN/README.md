@@ -32,7 +32,7 @@ login
 password cisco
 exit
 
-interface vlan1
+int vlan1
 ip address 192.168.1.2 255.255.255.0
 exit
 
@@ -45,19 +45,19 @@ name Support
 exit
 
 conf t
-interface fastethernet 0/5
+int fa 0/5
 switchport mode access
 switchport access vlan 10
 
-interface fastethernet 0/6
+int fa 0/6
 switchport mode access
 switchport access vlan 10
 
-interface fastethernet 0/7
+int fa 0/7
 switchport mode access
 switchport access vlan 10
 
-interface fastethernet 0/8
+int fa 0/8
 switchport mode access
 switchport access vlan 10
 
@@ -65,19 +65,19 @@ end
 
 conf t
 
-interface fastethernet 0/9
+int fa 0/9
 switchport mode access
 switchport access vlan 20
 
-interface fastethernet 0/10
+int fa 0/10
 switchport mode access
 switchport access vlan 20
 
-interface fastethernet 0/11
+int fa 0/11
 switchport mode access
 switchport access vlan 20
 
-interface fastethernet 0/12
+int fa 0/12
 switchport mode access
 switchport access vlan 20
 
@@ -87,14 +87,14 @@ show vlan
 
 
 
-interface fastethernet0/1
+int fa0/1
 switchport mode trunk
 end 
 ```
 3. RouterA
 ```bash
 enable 
-configure terminal 
+conf t 
 hostname RouterA
 
 enable secret class
@@ -111,20 +111,20 @@ login
 password cisco
 exit
 
-interface fastethernet 0/0
+int fa 0/0
 no shutdown
 
-interface fastethernet 0/0.1
+int fa 0/0.1
 encapsulation dot1q 1
-ip address 192.168.1.1 255.255.255.0
+ip add 192.168.1.1 255.255.255.0
 
-interface fastethernet 0/0.2
+int fa 0/0.2
 encapsulation dot1q 10
-ip address 192.168.5.1 255.255.255.0
+ip add 192.168.5.1 255.255.255.0
 
-interface fastethernet 0/0.3
+int fa 0/0.3
 encapsulation dot1q 20
-ip address 192.168.7.1 255.255.255.0
+ip add 192.168.7.1 255.255.255.0
 
 end
 
@@ -136,7 +136,7 @@ end
 
 ```bash
 enable
-configure terminal
+conf t
 vlan 1
 name Native
 exit
@@ -159,14 +159,14 @@ vtp mode server
 4. Configure other switches
 ```bash
 enable
-configure terminal
+conf t
 vtp domain CORP
 vtp mode client
 
 ```
 5. Assign VLANs to Ports
 ```bash
-interface FastEthernet0/1
+int fa0/1
 switchport mode access
 switchport access vlan 2
 
@@ -174,23 +174,23 @@ switchport access vlan 2
 6. configure the router
 ```bash
 enable
-configure terminal
-interface GigabitEthernet0/0
+conf t
+int fa0/0
 no shutdown
 
-interface GigabitEthernet0/0.1
+int fa0/0.1
 encapsulation dot1Q 1
 ip address 192.168.1.1 255.255.255.0
 
-interface GigabitEthernet0/0.2
+int fa0/0.2
 encapsulation dot1Q 2
 ip address 192.168.2.1 255.255.255.0
 
-interface GigabitEthernet0/0.3
+int fa0/0.3
 encapsulation dot1Q 3
 ip address 192.168.3.1 255.255.255.0
 
-interface GigabitEthernet0/0.4
+int fa0/0.4
 encapsulation dot1Q 4
 ip address 192.168.4.1 255.255.255.0
 
@@ -204,23 +204,23 @@ conf t
 hostname 3550A
 ip routing 
 
-interface fa0/1
+int fa0/1
 switchport trunk encapsulation dot1q
 switchport mode trunk
 
-interface fa0/2
+int fa0/2
 switchport trunk encapsulation dot1q
 switchport mode trunk
 
-interface fa0/3
+int fa0/3
 switchport trunk encapsulation dot1q
 switchport mode trunk
 
-interface fa0/4
+int fa0/4
 switchport trunk encapsulation dot1q
 switchport mode trunk
 
-interface vlan 1
+int vlan 1
 ip address 192.168.10.1 255.255.255.0
 no shut
 
@@ -241,15 +241,16 @@ sh vtp status
 2. 2950A
 
 ``` bash
+enable
 conf t 
 hostname 2950A
-interface fa0/11
+int fa0/11
 switch mode trunk 
 
-interface fa0/12
+int fa0/12
 switch mode trunk
 
-interface vlan 1
+int vlan 1
 ip address 192.168.10.2 255.255.255.0
 no shutdown
 exit
@@ -257,15 +258,16 @@ exit
 
 3. 2950B
 ```bash
+enable
 conf t 
 hostname 2950B
-interface fa0/11
+int fa0/11
 switch mode trunk 
 
-interface fa0/12
+int fa0/12
 switch mode trunk
 
-interface vlan 1
+int vlan 1
 ip address 192.168.10.3 255.255.255.0
 no shutdown
 exit
@@ -284,6 +286,7 @@ show vlan
 ```bash
 conf t
 int fa0/2
+switchport mode access
 switchport access vlan 10
 exit
 ```
@@ -291,17 +294,15 @@ exit
 ```bash
 conf t
 int fa0/2
+switchport mode access
 switchport access vlan 20
 exit
 ```
-7. 2950A
+7. 3550
 ```bash
 conf t
 int vlan 10
 ip address 10.10.10.1 255.255.255.0
-```
-8. 2950B
-```bash
 int vlan 20
 ip address 20.20.20.1 255.255.255.0
 exit
@@ -311,3 +312,118 @@ ping 192.168.10.3
 ```
 
 ## Inter-VLAN network with Switch Layer 3
+
+1. Setup the multilayer switch.
+
+```bash
+enable
+conf t
+vlan 1
+name Management
+exit
+vlan 2
+name Sales
+exit
+vlan 3
+name HR
+exit
+vlan 4
+name ENG
+exit
+
+vtp mode server
+vtp domain CORP
+
+ip routing 
+
+int fa0/1
+switchport trunk encapsulation dot1q
+switchport mode trunk
+
+int fa0/2
+switchport trunk encapsulation dot1q
+switchport mode trunk
+
+int fa0/3
+switchport trunk encapsulation dot1q
+switchport mode trunk
+
+int fa0/4
+switchport trunk encapsulation dot1q
+switchport mode trunk
+
+interface vlan 1
+ip address 192.168.1.1 255.255.255.0
+no shutdown
+exit
+
+interface vlan 2
+ip address 192.168.2.1 255.255.255.0
+no shutdown
+exit
+
+interface vlan 3
+ip address 192.168.3.1 255.255.255.0
+no shutdown
+exit
+
+interface vlan 4
+ip address 192.168.4.1 255.255.255.0
+no shutdown
+exit
+
+```
+3. Setup Switches
+```bash
+enable 
+conf t
+vtp mode client
+vtp domain CORP
+int fa0/11
+switch mode trunk 
+
+int fa0/12
+switch mode trunk
+
+interface fastethernet 0/1
+switchport mode access
+switchport access vlan 1
+exit
+
+interface fastethernet 0/2
+switchport mode access
+switchport access vlan 2
+exit
+
+interface fastethernet 0/3
+switchport mode access
+switchport access vlan 3
+exit
+
+interface fastethernet 0/4
+switchport mode access
+switchport access vlan 4
+exit
+
+```
+## Switch0
+```bash
+int vlan 1
+ip address 192.168.1.2 255.255.255.0
+no shutdown
+exit
+```
+## Switch1
+```bash
+int vlan 1
+ip address 192.168.1.3 255.255.255.0
+no shutdown
+exit
+```
+## Switch2
+```bash
+int vlan 1
+ip address 192.168.1.4 255.255.255.0
+no shutdown
+exit
+```
